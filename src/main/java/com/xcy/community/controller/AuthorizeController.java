@@ -11,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Map;
 
 @Controller
 //@Component
@@ -30,7 +32,8 @@ public class AuthorizeController {
     @GetMapping("/callback")
     //code和state是从<a href>中获取
     public String callback(@RequestParam(name = "code") String code,
-                           @RequestParam(name = "state") String state) throws IOException {
+                           @RequestParam(name = "state") String state,
+                           HttpSession session, Map<String,Object> map) throws IOException {
         AccessTokenDto accessTokenDto = new AccessTokenDto();
         //setClient_id为GitHub账户下OAuth Apps内Client ID
         accessTokenDto.setClient_id(client_id);
@@ -47,6 +50,14 @@ public class AuthorizeController {
         //通过GET请求方式，在access token中获取user的信息
         GithubUser githubUser = githubProvider.getUser(accessToken);
         System.out.println(githubUser.getName());
-        return "index";
+
+        if(githubUser!=null){
+            session.setAttribute("user",githubUser);
+
+            return "redirect:/";
+        }else{
+
+            return "redirect:/";
+        }
     }
 }

@@ -2,3 +2,8 @@ github:
   client_id: 462abf91327ed55ce95e
   client_secret: a29edcc865b92e4aa1dc099a35fc8254980004c1
   redirect_uri: http://localhost:8080/callback
+
+#禁用浏览器缓存
+spring:
+  thymeleaf:
+    cache: false
