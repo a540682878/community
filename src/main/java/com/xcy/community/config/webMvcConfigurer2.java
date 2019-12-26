@@ -18,21 +18,25 @@ public class webMvcConfigurer2 implements WebMvcConfigurer {
         registry.addViewController("/xcy").setViewName("index");
     }
 
-    @Bean
+    //所有的WebMvcConfigurer组件都会一起起作用
+    @Bean//将组件注册在容器
     public WebMvcConfigurer webMvcConfigurer(){
 
         WebMvcConfigurer webMvcConfigurer = new WebMvcConfigurer(){
+            @Override
+            public void addViewControllers(ViewControllerRegistry registry) {
+                registry.addViewController("/").setViewName("index");
+                registry.addViewController("/index.html").setViewName("index");
+            }
             //注册拦截器
             @Override
             public void addInterceptors(InterceptorRegistry registry) {
-
                 registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/**")
-                        .excludePathPatterns("/callback","/","/static/**","/webjars/**");
+                        .excludePathPatterns("/index.html","/","/xcy","/static/**","/resources","/callback","/webjars/**","/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg",
+                                "/**/*.jpeg", "/**/*.gif", "/**/fonts/*", "/**/*.svg");
             }
         };
-
         return webMvcConfigurer;
     }
-
 }
 

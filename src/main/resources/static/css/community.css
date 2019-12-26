@@ -1,0 +1,22 @@
+body{
+    background-color: #efefef;
+}
+
+.container-fluid{
+    background-color: white;
+    margin: 30px;
+}
+
+.btn-publish{
+    float: right;
+    margin-bottom: 15px;
+}
+.media-object{
+    width: 40px;
+    height: 40px;
+}
+.text-info{
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}
