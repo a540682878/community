@@ -23,15 +23,17 @@
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <h2><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>发起</h2>
             <hr>
-            <!--page-->
+            <!--pageInfo.list  遍历pageInfo内所有的信息-->
             <div class="media" th:each="question:${pageInfo.list}">
                 <div class="media-left">
                     <a href="#">
+                        <!--获取question内的用户头像，如果从user信息中获取，user都没有登录，不符合逻辑-->
                         <img class="media-object" th:src="${question.avatarUrl}"
                              src="https://avatars0.githubusercontent.com/u/58909068?v=4" alt="...">
                     </a>
                 </div>
                 <div class="media-body">
+                    <!--获取question的title-->
                     <a href="#"><h4 class="media-heading" th:text="${question.title}">我发布的第一个spring boot问题</h4></a>
                     <p>
                         <span class="text-info"> <span th:text="${question.commentCount}"></span> 人回复 &nbsp;&nbsp;&nbsp;•
@@ -49,39 +51,40 @@
             <!--分页按钮-->
             <nav aria-label="Page navigation">
                 <ul class="pagination">
-
+                    <!--首页按钮  href直接设的到/-->
                     <li>
                         <a href="/" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-
+                    <!--上一页按钮   hasPreviousPage表示前一页有内容    pn代表controller内调用方法的参数，表示当前页数-->
+                    <!--pageinfo.pageNum表示当前页-->
                     <li>
                         <a href="#" th:if="${pageInfo.hasPreviousPage}" th:href="@{/(pn=${(pageInfo.pageNum)-1})}"
                            aria-label="Previous">
                             <span aria-hidden="true">上一页</span>
                         </a>
                     </li>
-
+                    <!--遍历navigatepageNums，显示按钮列表；navigatepageNums表示所有导航页号-->
+                    <!--th:class="${pageInfo.pageNum==page}?'active'"表示，当前页面时，页码高亮显示-->
                     <li th:each="page:${pageInfo.navigatepageNums}" th:class="${pageInfo.pageNum==page}?'active'">
                         <a href="#" th:if="${page==pageInfo.pageNum}" >
                             <span th:text="${page}"></span>
                         </a>
-
+                        <!--如果不是当前页面，按钮的href就等于/?pageNum=${page}-->
+                        <!--例：点击第5页时，地址为http://localhost:8080/?pn=5-->
                         <a th:href="@{/(pn=${page})}" th:if="${page!=pageInfo.pageNum}">
                             <span th:text="${page}"></span>
                         </a>
-
-
                     </li>
-
+                    <!--下一页按钮 hasNextPage表示是否有下一页-->
                     <li>
-                        <a href="#" th:if="${pageInfo.hasPreviousPage}" th:href="@{/(pn=${(pageInfo.pageNum)-1})}"
+                        <a href="#" th:if="${pageInfo.hasNextPage}" th:href="@{/(pn=${(pageInfo.pageNum)-1})}"
                            aria-label="Previous">
                             <span aria-hidden="true">下一页</span>
                         </a>
                     </li>
-
+                    <!--尾页按钮 pageInfo.pages表示导航页码数-->
                     <li>
                         <a href="#" th:href="@{/(pn=${pageInfo.pages})}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
