@@ -1,5 +1,6 @@
 package com.xcy.community.service;
 
+import com.github.pagehelper.Page;
 import com.xcy.community.dto.QuestionDto;
 import com.xcy.community.mapper.QuestionMapper;
 import com.xcy.community.mapper.UserMapper;
@@ -20,13 +21,17 @@ public class QuestionService {
 
     @Autowired
     private QuestionMapper questionMapper;
+    @Autowired
+    UserMapper userMapper;
 
+    Question question = new Question();
+    //添加发布的question到数据库
     public Boolean getQuestion(@RequestParam(name = "title")String title,
                                  @RequestParam(name = "description")String description,
                                  @RequestParam(name = "tag")String tag,
                                  HttpServletRequest request){
         User user = (User) request.getSession().getAttribute("user");
-        Question question = new Question();
+
 
         question.setTitle(title);
         question.setDescription(description);
@@ -34,15 +39,14 @@ public class QuestionService {
         question.setGmtCreat(System.currentTimeMillis());
         question.setGmtModified(question.getGmtCreat());
         question.setCreator(user.getId());
+        question.setAvatarUrl(user.getAvatarUrl());
 
         questionMapper.insertQuestion(question);
         return true;
     }
 
-    @Autowired
-    UserMapper userMapper;
 
-    public List<QuestionDto> list() {
+    public List<QuestionDto> questionPage() {
         List<Question> questions = questionMapper.list();
         List<QuestionDto> questionDtoList = new ArrayList<>();
         for(Question question:questions){
@@ -55,4 +59,9 @@ public class QuestionService {
 
         return questionDtoList;
     }
+
+    public List<Question> list(){
+        return questionMapper.list();
+    }
+
 }

@@ -1,7 +1,9 @@
 package com.xcy.community.controller;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xcy.community.dto.QuestionDto;
-import com.xcy.community.mapper.QuestionMapper;
 import com.xcy.community.mapper.UserMapper;
 import com.xcy.community.model.Question;
 import com.xcy.community.model.User;
@@ -10,11 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+
 
 @Controller
 public class IndexController {
@@ -26,25 +28,17 @@ public class IndexController {
     UserMapper userMapper;
 
     @GetMapping("/")
-    public String index(HttpServletRequest request, Model model) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            return "index";
-        } else {
-            for (Cookie cookie : cookies) {
-                if ("token".equals(cookie.getName())) {
-                    String token = cookie.getValue();
-                    User user = userMapper.findByToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                    break;
-                }
-            }
+    public String index(HttpServletRequest request,
+                        @RequestParam(defaultValue = "1")Integer pn,
+                        @RequestParam(defaultValue = "5")Integer pageSize,
+                        Model model) {
 
-            List<QuestionDto> questionList = questionService.list();
-            model.addAttribute("questions", questionList);
+            Page p = PageHelper.startPage(pn,pageSize);
+            //调用questionServices.questionPage()方法,得到List<QuestionDTO>
+            //PageInfo<Question>内集合了所有的question信息即分页功能
+            PageInfo info = new PageInfo<>(questionService.list(),5);
+            model.addAttribute("pageInfo", info);
             return "index";
         }
-    }
+
 }
