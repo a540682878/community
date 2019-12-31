@@ -2,7 +2,7 @@ package com.xcy.community.model;
 
 public class User {
     private Integer id;
-    private String accoundId;
+    private Long accoundId;
     private String name;
     private String token;
     private Long gmtCreat;
@@ -25,11 +25,11 @@ public class User {
         this.id = id;
     }
 
-    public String getAccoundId() {
+    public Long getAccoundId() {
         return accoundId;
     }
 
-    public void setAccoundId(String accoundId) {
+    public void setAccoundId(Long accoundId) {
         this.accoundId = accoundId;
     }
 

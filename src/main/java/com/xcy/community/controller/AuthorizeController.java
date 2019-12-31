@@ -5,6 +5,7 @@ import com.xcy.community.dto.GithubUser;
 import com.xcy.community.mapper.UserMapper;
 import com.xcy.community.model.User;
 import com.xcy.community.provider.GithubProvider;
+import com.xcy.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -26,10 +27,13 @@ import java.util.UUID;
 //@ConfigurationProperties(prefix = "github")
 public class AuthorizeController {
     @Autowired
-    GithubProvider githubProvider;
+    private GithubProvider githubProvider;
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
+
+    @Autowired
+    private UserService userService;
 
     @Value("${github.client_id}")
     private String client_id;
@@ -65,13 +69,11 @@ public class AuthorizeController {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
 
-            user.setAccoundId(String.valueOf(githubUser.getId()));
+            user.setAccoundId(githubUser.getId());
             user.setName(githubUser.getName());
-            user.setGmtCreat(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreat());
             user.setAvatarUrl(githubUser.getAvatarUrl());
 
-            userMapper.insertUser(user);
+            userService.addOrUpdate(user);
 
             response.addCookie(new Cookie("token",token));
             request.getSession().setAttribute("user",user);

@@ -38,7 +38,7 @@ public class QuestionService {
         question.setTag(tag);
         question.setGmtCreat(System.currentTimeMillis());
         question.setGmtModified(question.getGmtCreat());
-        question.setCreator(user.getId());
+        question.setCreator(user.getAccoundId());
         question.setAvatarUrl(user.getAvatarUrl());
 
         questionMapper.insertQuestion(question);
@@ -50,7 +50,7 @@ public class QuestionService {
         List<Question> questions = questionMapper.list();
         List<QuestionDto> questionDtoList = new ArrayList<>();
         for(Question question:questions){
-            User user = userMapper.findUserById(question.getCreator());
+            User user = userMapper.findUserByAccoundId(question.getCreator());
             QuestionDto questionDto = new QuestionDto();
             BeanUtils.copyProperties(question,questionDto);
             questionDto.setUser(user);
